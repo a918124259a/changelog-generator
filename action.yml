@@ -1,0 +1,24 @@
+name: "Changelog Generator"
+description: "Auto-generate a structured CHANGELOG.md from git history"
+author: "a918124259a"
+branding:
+  icon: "file-text"
+  color: "green"
+inputs:
+  working-directory:
+    description: "Working directory (default: repo root)"
+    required: false
+    default: "."
+outputs:
+  changelog-path:
+    description: "Path to generated CHANGELOG.md"
+    value: ${{ steps.generate.outputs.changelog-path }}
+runs:
+  using: "composite"
+  steps:
+    - id: generate
+      run: |
+        chmod +x ${{ github.action_path }}/changelog.sh
+        bash ${{ github.action_path }}/changelog.sh ${{ inputs.working-directory }}
+        echo "changelog-path=${{ inputs.working-directory }}/CHANGELOG.md" >> $GITHUB_OUTPUT
+      shell: bash
